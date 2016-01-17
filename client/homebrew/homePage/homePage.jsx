@@ -3,10 +3,10 @@ var _ = require('lodash');
 var cx = require('classnames');
 
 var Statusbar = require('../statusbar/statusbar.jsx');
-var PHB = require('../phb/phb.jsx');
+var PageContainer = require('../pageContainer/pageContainer.jsx');
 var Editor = require('../editor/editor.jsx');
 
-var WelcomeText = require('./welcomeMessage.js');
+//var WelcomeText = require('./welcomeMessage.js');
 
 
 
@@ -14,9 +14,15 @@ var KEY = 'naturalCrit-homebrew';
 
 var HomePage = React.createClass({
 
+	getDefaultProps: function() {
+		return {
+			welcomeText : ""
+		};
+	},
+
 	getInitialState: function() {
 		return {
-			text: WelcomeText
+			text: this.props.welcomeText
 		};
 	},
 
@@ -29,7 +35,6 @@ var HomePage = React.createClass({
 			})
 		}
 		*/
-
 	},
 
 	handleTextChange : function(text){
@@ -41,16 +46,17 @@ var HomePage = React.createClass({
 	},
 
 	render : function(){
-		var self = this;
 		return(
 			<div className='homePage'>
-				<Statusbar />
+				<Statusbar
+					printId="Nkbh52nx_l"
+				/>
 				<div className='paneSplit'>
 					<div className='leftPane'>
 						<Editor text={this.state.text} onChange={this.handleTextChange} />
 					</div>
 					<div className='rightPane'>
-						<PHB text={this.state.text} />
+						<PageContainer text={this.state.text} />
 					</div>
 				</div>
 

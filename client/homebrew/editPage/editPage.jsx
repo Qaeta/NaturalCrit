@@ -3,12 +3,14 @@ var _ = require('lodash');
 var cx = require('classnames');
 
 var Statusbar = require('../statusbar/statusbar.jsx');
-var PHB = require('../phb/phb.jsx');
+var PageContainer = require('../pageContainer/pageContainer.jsx');
 var Editor = require('../editor/editor.jsx');
 
 var FullClassGen = require('../editor/snippets/fullclass.gen.js');
 
 var request = require("superagent");
+
+var SAVE_TIMEOUT = 3000;
 
 var EditPage = React.createClass({
 	getDefaultProps: function() {
@@ -58,13 +60,14 @@ var EditPage = React.createClass({
 					lastUpdated : res.body.updatedAt
 				})
 			})
-	}, 1500),
+	}, SAVE_TIMEOUT),
 
 	render : function(){
 		return <div className='editPage'>
 			<Statusbar
 				editId={this.props.entry.editId}
 				shareId={this.props.entry.shareId}
+				printId={this.props.entry.shareId}
 				lastUpdated={this.state.lastUpdated}
 				isPending={this.state.pending} />
 
@@ -73,7 +76,7 @@ var EditPage = React.createClass({
 					<Editor text={this.state.text} onChange={this.handleTextChange} />
 				</div>
 				<div className='rightPane'>
-					<PHB text={this.state.text} />
+					<PageContainer text={this.state.text} />
 				</div>
 			</div>
 		</div>

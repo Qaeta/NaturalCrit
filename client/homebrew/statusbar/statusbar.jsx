@@ -5,12 +5,18 @@ var Moment = require('moment');
 
 var Logo = require('naturalCrit/logo/logo.jsx');
 
+var replaceAll = function(str, find, replace) {
+	return str.replace(new RegExp(find, 'g'), replace);
+}
+
 var Statusbar = React.createClass({
 
 	getDefaultProps: function() {
 		return {
 			//editId: null,
+			sourceText : null,
 			shareId : null,
+			printId : null,
 			isPending : false,
 			lastUpdated : null,
 			info : null,
@@ -32,6 +38,19 @@ var Statusbar = React.createClass({
 	},
 
 
+	openSourceWindow : function(){
+		var sourceWindow = window.open();
+
+		var content = replaceAll(this.props.sourceText, '<', '&lt;');
+		content = replaceAll(content, '>', '&gt;');
+
+		console.log(content);
+
+		sourceWindow.document.write('<code><pre>' + content + '</pre></code>');
+	},
+
+
+
 	renderInfo : function(){
 		if(!this.props.lastUpdated) return null;
 
@@ -44,6 +63,14 @@ var Statusbar = React.createClass({
 			</div>
 		];
 
+	},
+
+	renderSourceButton  : function(){
+		if(!this.props.sourceText) return null;
+
+		return <a className='sourceField' onClick={this.openSourceWindow}>
+			View Source <i className='fa fa-code' />
+		</a>
 	},
 
 	renderNewButton  : function(){
@@ -59,6 +86,14 @@ var Statusbar = React.createClass({
 
 		return <a className='shareField' key='share' href={'/homebrew/share/' + this.props.shareId} target="_blank">
 			Share Link <i className='fa fa-external-link' />
+		</a>
+	},
+
+	renderPrintButton : function(){
+		if(!this.props.printId) return null;
+
+		return <a className='printField' key='print' href={'/homebrew/print/' + this.props.printId} target="_blank">
+			Print View <i className='fa fa-print' />
 		</a>
 	},
 
@@ -87,6 +122,8 @@ var Statusbar = React.createClass({
 			<div className='controls right'>
 				{this.renderStatus()}
 				{this.renderInfo()}
+				{this.renderSourceButton()}
+				{this.renderPrintButton()}
 				{this.renderShare()}
 				{this.renderNewButton()}
 			</div>
